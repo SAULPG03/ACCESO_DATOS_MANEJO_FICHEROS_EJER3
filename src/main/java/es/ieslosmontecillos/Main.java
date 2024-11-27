@@ -50,8 +50,18 @@ public class Main {
                     renameFileorDirectory(fileRename,sc);
                     break;
                 case 5:
+                    System.out.println("Ingrese la ruta del nombre del fichero o archivo que quieres eliminar: ");
+                    String fileDelete = sc.nextLine();
+                    deleteFileorDirectory(directorioPadre,fileDelete);
                     break;
                 case 6:
+                    System.out.println("Ingrese el nombre del fichero a escribir: ");
+                    String fileEscribir = sc.nextLine();
+                    try {
+                        insertStringFile(directorioPadre,fileEscribir,sc);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
                 case 7:
                     break;
@@ -130,21 +140,31 @@ public class Main {
         }
     }
 
-    public static void deleteFileorDirectory(File ruta){
-        if(ruta.exists()){
-            ruta.delete();
+    public static void deleteFileorDirectory(File ruta,String fileDelete){
+        String rutaPadre= ruta.getAbsolutePath();
+        File children=new File(rutaPadre,fileDelete);
+        if(children.exists()){
+            if(children.delete()){
+                System.out.println("Se ha borrado el fichero correctamente");
+            }else{
+                System.out.println("No se ha borrado el fichero correctamente");
+            }
         }else{
             System.err.println("No se encuentra el fichero o directorio");
         }
     }
 
-    public static void insertStringFile(File ruta,String string) throws IOException {
-        if (ruta.exists()) {
-            if (ruta.isFile()) {
-                FileWriter fw = new FileWriter(ruta);
-                fw.write(string);
+    public static void insertStringFile(File ruta,String fichero,Scanner sc) throws IOException {
+        String rutaPadre= ruta.getAbsolutePath();
+        File children=new File(rutaPadre,fichero);
+        if (children.exists()) {
+            if (children.isFile()) {
+                System.out.println("Introduce el texto: ");
+                String texto = sc.nextLine();
+                FileWriter fw = new FileWriter(children);
+                fw.write(texto);
                 fw.close();
-            } else if (ruta.isDirectory()) {
+            } else if (children.isDirectory()) {
                 System.err.println("No se escribir en un directorio");
             }
         }else{
