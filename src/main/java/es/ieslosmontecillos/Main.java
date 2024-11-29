@@ -64,6 +64,13 @@ public class Main {
                     }
                     break;
                 case 7:
+                    System.out.println("Ingrese el nombre del fichero a escribir: ");
+                    String fileAnadir = sc.nextLine();
+                    try{
+                        appendStringFile(directorioPadre,fileAnadir,sc);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
                 case 8:
                     System.out.println("Te has salido del programa");
@@ -172,13 +179,17 @@ public class Main {
         }
     }
 
-    public static void appendStringFile(File ruta,String string) throws IOException {
-        if (ruta.exists()) {
-            if (ruta.isFile()) {
-                FileWriter fw = new FileWriter(ruta, true);
-                fw.write(string);
+    public static void appendStringFile(File ruta,String fichero,Scanner sc) throws IOException {
+        String rutaPadre= ruta.getAbsolutePath();
+        File children=new File(rutaPadre,fichero);
+        if (children.exists()) {
+            if (children.isFile()) {
+                System.out.println("Introduce el texto: ");
+                String texto = sc.nextLine();
+                FileWriter fw = new FileWriter(children,true);
+                fw.write(texto);
                 fw.close();
-            } else if (ruta.isDirectory()) {
+            } else if (children.isDirectory()) {
                 System.err.println("No se escribir en un directorio");
             }
         }else{
